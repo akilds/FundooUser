@@ -50,7 +50,7 @@ public class UserRegistrationController {
 	public ResponseEntity<ResponseDTO> addUserRegistrationData(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
 		log.debug("User DTO : " + userRegistrationDTO.toString());
 		UserRegistrationData userRegistrationData = userRegistrationService.createUserRegistrationData(userRegistrationDTO);
-		ResponseDTO respDTO = new ResponseDTO("Created Employee Payroll Data Successfully", userRegistrationData);
+		ResponseDTO respDTO = new ResponseDTO("Created User Registration Data Successfully", userRegistrationData);
 		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 	}
 	
@@ -58,7 +58,7 @@ public class UserRegistrationController {
 	public ResponseEntity<ResponseDTO> updateEmployeePayrollData(@PathVariable("userId") int userId,
 			                                                     @Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
 		UserRegistrationData userRegistrationData = userRegistrationService.updateUserRegistrationData(userId, userRegistrationDTO);
-		ResponseDTO respDTO = new ResponseDTO("Updated Employee Payroll Data Successfully", userRegistrationData);
+		ResponseDTO respDTO = new ResponseDTO("Updated User Registration Data Successfully", userRegistrationData);
 		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
 	}
 	
