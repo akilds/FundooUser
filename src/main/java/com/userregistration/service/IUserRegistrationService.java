@@ -18,5 +18,6 @@ public interface IUserRegistrationService {
 
 	Response deleteUser(String token);
 
-	
+	Response verifyUser(String token);
+
 }

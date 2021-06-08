@@ -60,6 +60,22 @@ public class UserRegistrationService implements IUserRegistrationService{
 		}	
 	}
 
+	@Override
+	public Response verifyUser(String token) {
+		int id = tokenUtil.decodeToken(token);
+		Optional<UserRegistrationData> isPresent = userRepository.findById(id);
+		if(isPresent.isPresent()) {
+			log.debug("User: " + isPresent.get() + " Verified!");
+			isPresent.get().setVerify(true);
+			userRepository.save(isPresent.get());
+			return new Response(200, "User Verified successfully!", null);
+		}
+		else {
+			log.error("User Token Is Not valid");
+			throw new UserRegistrationException(400, "User Token Is Not Valid");
+		}
+	}
+	
 	//Updates an existing user data
 	@Override
 	public Response updateUser(String token, UserRegistrationDTO userDTO) {

@@ -38,6 +38,12 @@ public class UserRegistrationController {
 		return new ResponseEntity<List<?>>(response, HttpStatus.OK);
 	}
 	
+	@GetMapping("/verify/{token}")
+	public ResponseEntity<Response> verifyUser(@PathVariable String token){
+		Response userEntity = userRegistrationService.verifyUser(token);
+		return new ResponseEntity<Response>(userEntity,HttpStatus.OK);
+	}
+	
 	@PostMapping("/create")
 	public ResponseEntity<Response> addUserRegistrationData(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
 		log.info("Create User Data : " + userRegistrationDTO);
