@@ -2,14 +2,21 @@ package com.userregistration.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.userregistration.dto.UserRegistrationDTO;
 import com.userregistration.model.UserRegistrationData;
+import com.userregistration.util.Response;
 
 public interface IUserRegistrationService {
 
-	List<UserRegistrationData> getUserRegistrationData();
-	UserRegistrationData createUserRegistrationData(UserRegistrationDTO userRegistrationDTO);	
-	UserRegistrationData updateUserRegistrationData(int empId, UserRegistrationDTO userRegistrationDTO);
-	void deleteUserRegistrationData(int empId);
-	UserRegistrationData getUserRegistrationDataById(int userId);
+	List<UserRegistrationData> getAllUsers(String token);
+
+	Response addUser(@Valid UserRegistrationDTO userRegistrationDTO);
+
+	Response updateUser(String token, @Valid UserRegistrationDTO userRegistrationDTO);
+
+	Response deleteUser(String token);
+
+	
 }

@@ -5,13 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.userregistration.dto.ResponseDTO;
+import com.userregistration.util.Response;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,29 +20,25 @@ public class UserRegistrationExceptionHandler {
 	
 	private static final String message = "Exception while processing REST Request";
 	
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<ResponseDTO> handleHttpMessageNotReadableException(
-										HttpMessageNotReadableException exception) {
-		log.error("Invalid Date Format", exception);
-		ResponseDTO responseDTO = new ResponseDTO(message, " Should have date in format dd MMM yyyy");
-		return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.BAD_REQUEST);
-	}
+	private static final int errorCode = 400;
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ResponseDTO> handleMethodArgumentNotValidException(
+	public ResponseEntity<Response> handleMethodArgumentNotValidException(
 										MethodArgumentNotValidException exception) {
 		List<ObjectError> errorList = exception.getBindingResult().getAllErrors();
 		List<String> errorMsg = errorList.stream()
 								.map(objErr -> objErr.getDefaultMessage())
 								.collect(Collectors.toList());
-		ResponseDTO responseDTO = new ResponseDTO(message, errorMsg);
-		return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.BAD_REQUEST);
+		log.error("Error msg:" + message + errorMsg);
+		Response response = new Response(errorCode, message, errorMsg);
+		return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
 	}
 	
 	@ExceptionHandler(UserRegistrationException.class)
-	public ResponseEntity<ResponseDTO> handleUserRegistrationException(
+	public ResponseEntity<Response> handleContactRegisterException(
 										UserRegistrationException exception) {
-		ResponseDTO responseDTO = new ResponseDTO(message, exception.getMessage());
-		return new ResponseEntity<ResponseDTO>(responseDTO, HttpStatus.BAD_REQUEST);
+		log.error("Error msg:" + message + exception.getStatusMessage());
+		Response response = new Response(exception.getStatusCode(), message, exception.getStatusMessage());
+		return new ResponseEntity<Response>(response, HttpStatus.BAD_REQUEST);
 	}
 }

@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.userregistration.dto.ResponseDTO;
 import com.userregistration.dto.UserRegistrationDTO;
 import com.userregistration.model.UserRegistrationData;
 import com.userregistration.service.IUserRegistrationService;
+import com.userregistration.util.Response;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,42 +31,33 @@ public class UserRegistrationController {
 	@Autowired
 	private IUserRegistrationService userRegistrationService;
 	
-	@GetMapping({"","/","/get"})
-	public ResponseEntity<ResponseDTO> getAllUsersRegistered() {
-		List<UserRegistrationData> userList = null;
-		userList = userRegistrationService.getUserRegistrationData();
-		ResponseDTO respDTO = new ResponseDTO("Get Call Success", userList);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
-	}
-	
-	@GetMapping("/get/{userId}")
-	public ResponseEntity<ResponseDTO> getUserRegistrationData(@PathVariable("userId") int userId) {
-		UserRegistrationData userData = userRegistrationService.getUserRegistrationDataById(userId);
-		ResponseDTO respDTO = new ResponseDTO("Get Call for ID Successful", userData);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+	@GetMapping("getallusersregistered/{token}")
+	public ResponseEntity<List<?>> getAllUsersRegistered(@PathVariable String token) {
+		log.info("Get All User Data");
+		List<UserRegistrationData> response = userRegistrationService.getAllUsers(token);
+		return new ResponseEntity<List<?>>(response, HttpStatus.OK);
 	}
 	
 	@PostMapping("/create")
-	public ResponseEntity<ResponseDTO> addUserRegistrationData(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
-		log.debug("User DTO : " + userRegistrationDTO.toString());
-		UserRegistrationData userRegistrationData = userRegistrationService.createUserRegistrationData(userRegistrationDTO);
-		ResponseDTO respDTO = new ResponseDTO("Created User Registration Data Successfully", userRegistrationData);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+	public ResponseEntity<Response> addUserRegistrationData(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
+		log.info("Create User Data : " + userRegistrationDTO);
+		Response response  = userRegistrationService.addUser(userRegistrationDTO);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 	
-	@PutMapping("/update/{userId}")
-	public ResponseEntity<ResponseDTO> updateEmployeePayrollData(@PathVariable("userId") int userId,
-			                                                     @Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
-		UserRegistrationData userRegistrationData = userRegistrationService.updateUserRegistrationData(userId, userRegistrationDTO);
-		ResponseDTO respDTO = new ResponseDTO("Updated User Registration Data Successfully", userRegistrationData);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+	@PutMapping("/update/{token}")
+	public ResponseEntity<Response> updateUserRegistrationData(@PathVariable String token,
+			                                                  @Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
+		log.info("Update User Data : " + userRegistrationDTO);
+		Response response  = userRegistrationService.updateUser(token, userRegistrationDTO);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/delete/{userId}")
-	public ResponseEntity<ResponseDTO> deleteUserRegistrationData(@PathVariable("userId") int userId) {
-		userRegistrationService.deleteUserRegistrationData(userId);
-		ResponseDTO respDTO = new ResponseDTO("Deleted Successfully", "Deleted Id : " + userId);
-		return new ResponseEntity<ResponseDTO>(respDTO, HttpStatus.OK);
+	@DeleteMapping("/delete/{token}")
+	public ResponseEntity<Response> deleteUserRegistrationData(@PathVariable String token) {
+		log.info("User Data Deleted");
+		Response response  = userRegistrationService.deleteUser(token);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 }
 
