@@ -35,23 +35,6 @@ public @Data class UserRegistrationData {
 	
 	public UserRegistrationData() {}
 	
-	public UserRegistrationData(int userid, String firstName, String lastName, String mobileNo,
-			String emailid, String password, String dob, LocalDateTime registerDate,
-			LocalDateTime updatedDate, boolean verify, String profilepic) {
-		super();
-		this.userId = userid;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.mobileNo = mobileNo;
-		this.emailId = emailid;
-		this.password = password;
-		this.dOB = dob;
-		this.registerDate = registerDate;
-		this.updatedDate = updatedDate;
-		this.verify = verify;
-		this.profilepic = profilepic;
-	}
-	
 	public void updateUserRegistration(UserRegistrationDTO userDTO) {
 		this.firstName = userDTO.firstName;
 		this.lastName = userDTO.lastName;
