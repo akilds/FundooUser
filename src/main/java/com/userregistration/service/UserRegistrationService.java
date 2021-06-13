@@ -82,6 +82,12 @@ public class UserRegistrationService implements IUserRegistrationService{
 		}
 	}
 	
+	@Override
+	public boolean verifyUserId(int userId) {
+		List<UserRegistrationData> users = userRepository.findAll();
+		return users.stream().anyMatch(user -> user.getUserId()==userId);
+	}
+	
     public void sendMail(String receiver, String token) {
 		
 		SimpleMailMessage message = new SimpleMailMessage();

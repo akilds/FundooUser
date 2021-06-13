@@ -20,4 +20,6 @@ public interface IUserRegistrationService {
 
 	Response verifyUser(String token);
 
+	boolean verifyUserId(int userId);
+
 }

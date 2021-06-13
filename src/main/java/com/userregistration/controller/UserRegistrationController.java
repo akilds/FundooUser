@@ -44,6 +44,12 @@ public class UserRegistrationController {
 		return new ResponseEntity<Response>(userEntity,HttpStatus.OK);
 	}
 	
+	@GetMapping("/verifyuserid/{userId}")
+	public boolean verifyUserId(@PathVariable int userId){
+		boolean userCheck = userRegistrationService.verifyUserId(userId);
+		return userCheck;
+	}
+	
 	@PostMapping("/create")
 	public ResponseEntity<Response> addUserRegistrationData(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
 		log.info("Create User Data : " + userRegistrationDTO);
