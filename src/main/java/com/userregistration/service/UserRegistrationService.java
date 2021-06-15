@@ -5,10 +5,9 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import com.userregistration.util.Email;
 import com.userregistration.util.Response;
 import com.userregistration.util.TokenUtil;
 import com.userregistration.dto.UserRegistrationDTO;
@@ -31,8 +30,7 @@ public class UserRegistrationService implements IUserRegistrationService{
 	@Autowired
 	private TokenUtil tokenUtil;
 	
-	@Autowired
-	private JavaMailSender mailSender;
+	private Email email;
 	
 	//Returns all user data present
 	@Override
@@ -61,7 +59,7 @@ public class UserRegistrationService implements IUserRegistrationService{
 			UserRegistrationData user = modelmapper.map(userDTO, UserRegistrationData.class);
 			userRepository.save(user);
 			String token = tokenUtil.createToken(user.getUserId());
-			sendMail(userDTO.getEmailId(),token);
+			email.sendMail(userDTO.getEmailId(),token);
 			return new Response(200, "User Data Added Successfully", token);
 		}	
 	}
@@ -86,19 +84,6 @@ public class UserRegistrationService implements IUserRegistrationService{
 	public boolean verifyUserId(int userId) {
 		List<UserRegistrationData> users = userRepository.findAll();
 		return users.stream().anyMatch(user -> user.getUserId()==userId);
-	}
-	
-    public void sendMail(String receiver, String token) {
-		
-		SimpleMailMessage message = new SimpleMailMessage();
-		
-		message.setFrom("akilrainadesigan@gmail.com");
-		message.setTo(receiver);
-		message.setText("Please click on the below link to verify : \n http://localhost:8080/userregistration/verify/"+token);
-		message.setSubject("Mail Validation");
-		
-		mailSender.send(message);
-		log.info("Mail Sent");
 	}
     
 	//Updates an existing user data
