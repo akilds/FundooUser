@@ -30,7 +30,8 @@ public class UserRegistrationController {
 
 	@Autowired
 	private IUserRegistrationService userRegistrationService;
-	
+
+	//Gets all the user data
 	@GetMapping("getallusersregistered/{token}")
 	public ResponseEntity<List<?>> getAllUsersRegistered(@PathVariable String token) {
 		log.info("Get All User Data");
@@ -38,25 +39,29 @@ public class UserRegistrationController {
 		return new ResponseEntity<List<?>>(response, HttpStatus.OK);
 	}
 	
+	//Verifies the user mail
 	@GetMapping("/verify/{token}")
 	public ResponseEntity<Response> verifyUser(@PathVariable String token){
 		Response userEntity = userRegistrationService.verifyUser(token);
 		return new ResponseEntity<Response>(userEntity,HttpStatus.OK);
 	}
 	
+	//verifies user by userId
 	@GetMapping("/verifyuserid/{userId}")
 	public boolean verifyUserId(@PathVariable int userId){
 		boolean userCheck = userRegistrationService.verifyUserId(userId);
 		return userCheck;
 	}
 	
+	//Creates a new user data
 	@PostMapping("/create")
 	public ResponseEntity<Response> addUserRegistrationData(@Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
 		log.info("Create User Data : " + userRegistrationDTO);
 		Response response  = userRegistrationService.addUser(userRegistrationDTO);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
-	
+
+	//Updates an existing user data
 	@PutMapping("/update/{token}")
 	public ResponseEntity<Response> updateUserRegistrationData(@PathVariable String token,
 			                                                  @Valid @RequestBody UserRegistrationDTO userRegistrationDTO) {
@@ -65,6 +70,7 @@ public class UserRegistrationController {
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 	
+	//Delete an existing user data
 	@DeleteMapping("/delete/{token}")
 	public ResponseEntity<Response> deleteUserRegistrationData(@PathVariable String token) {
 		log.info("User Data Deleted");

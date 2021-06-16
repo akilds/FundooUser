@@ -30,6 +30,7 @@ public class UserRegistrationService implements IUserRegistrationService{
 	@Autowired
 	private TokenUtil tokenUtil;
 	
+	@Autowired
 	private Email email;
 	
 	//Returns all user data present
@@ -64,6 +65,7 @@ public class UserRegistrationService implements IUserRegistrationService{
 		}	
 	}
 
+	//Verifies a user based on emailId
 	@Override
 	public Response verifyUser(String token) {
 		int id = tokenUtil.decodeToken(token);
@@ -80,6 +82,7 @@ public class UserRegistrationService implements IUserRegistrationService{
 		}
 	}
 	
+	//Verifies a user based on userId
 	@Override
 	public boolean verifyUserId(int userId) {
 		List<UserRegistrationData> users = userRepository.findAll();
